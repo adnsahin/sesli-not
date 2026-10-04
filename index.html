@@ -4,22 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E6B6A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sesli Not">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Sesli Not Kartı</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alex+Brush&family=Allura&family=Amatic+SC:wght@700&family=Baloo+2:wght@800&family=Bangers&family=Bebas+Neue&family=Caveat:wght@600&family=Cinzel:wght@700&family=Comfortaa:wght@700&family=Cormorant+Garamond:ital,wght@1,600&family=Courgette&family=Dancing+Script:wght@700&family=Fredoka:wght@600&family=Great+Vibes&family=Kalam:wght@700&family=Kaushan+Script&family=Lobster&family=Marck+Script&family=Merienda:wght@700&family=Monoton&family=Montserrat:wght@800&family=Nunito:wght@400;600;800&family=Pacifico&family=Parisienne&family=Patrick+Hand&family=Pinyon+Script&family=Playfair+Display:ital,wght@1,600&family=Righteous&family=Sacramento&display=swap">
 <style>
 /* Düzen: üstte canlı kart önizlemesi, altında yazı alanı + büyük mikrofon, kaydırılabilir sekmeler, en altta sabit gönder çubuğu */
 :root{
+  --accent-l:#0E6B6A; --accent-d:#3FB3B0;
   --bg:#EEF2F1; --surface:#FFFFFF; --fg:#1B2626; --muted:#5E6D6C;
-  --line:#D5DEDC; --accent:#0E6B6A; --accent-fg:#FFFFFF; --rec:#D33A3A; --soft:#E2ECEA;
+  --line:#D5DEDC; --accent:var(--accent-l); --accent-fg:#FFFFFF; --rec:#D33A3A; --soft:#E2ECEA;
   --ui:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   --display:"Pacifico","Dancing Script",cursive;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#121918;--surface:#1C2524;--fg:#E7EFEE;--muted:#93A4A2;--line:#2E3B3A;--accent:#3FB3B0;--accent-fg:#0B1514;--rec:#F06161;--soft:#243231;color-scheme:dark}
+  :root:not([data-theme="light"]){--bg:#121918;--surface:#1C2524;--fg:#E7EFEE;--muted:#93A4A2;--line:#2E3B3A;--accent:var(--accent-d);--accent-fg:#0B1514;--rec:#F06161;--soft:#243231;color-scheme:dark}
 }
+:root[data-theme="dark"]{--bg:#121918;--surface:#1C2524;--fg:#E7EFEE;--muted:#93A4A2;--line:#2E3B3A;--accent:var(--accent-d);--accent-fg:#0B1514;--rec:#F06161;--soft:#243231;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:15px;
@@ -35,7 +43,7 @@ h1{font-family:var(--display);font-weight:400;font-size:1.6rem;margin:0;color:va
 .preview{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px;display:flex;justify-content:center;
   background-image:linear-gradient(45deg,var(--soft) 25%,transparent 25%,transparent 75%,var(--soft) 75%),linear-gradient(45deg,var(--soft) 25%,transparent 25%,transparent 75%,var(--soft) 75%);
   background-size:20px 20px;background-position:0 0,10px 10px}
-#card{max-width:100%;max-height:58vh;width:auto;height:auto;border-radius:8px;display:block;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#card{max-width:100%;max-height:52vh;width:auto;height:auto;border-radius:8px;display:block;box-shadow:0 6px 20px rgba(0,0,0,.15)}
 
 .composer{display:flex;gap:10px;align-items:stretch}
 textarea{flex:1;min-width:0;min-height:104px;resize:vertical;font:16px/1.45 var(--ui);color:var(--fg);
@@ -119,6 +127,24 @@ input[type=text],input[type=url],input[type=search]{width:100%;min-width:0;font:
 .current{display:flex;gap:12px;align-items:center}
 .current img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid var(--line);flex:none}
 .current div{min-width:0}.current .hint{word-break:break-word}
+.voice{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.voice audio{flex:1;min-width:180px;height:40px}
+.vbtn{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 14px;font:800 13px var(--ui);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.vbtn i{width:10px;height:10px;border-radius:50%;background:var(--rec);display:inline-block}
+.vbtn.rec{background:var(--rec);color:#fff;border-color:var(--rec);font-variant-numeric:tabular-nums}
+.vbtn.rec i{background:#fff;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.vbtn.rec i{animation:none}}
+select{font:700 13px var(--ui);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 10px;max-width:100%}
+.media-out{display:flex;flex-direction:column;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--surface)}
+.media-out img,.media-out video{max-width:100%;max-height:50vh;border-radius:10px}
+.media-out .row{width:100%}.media-out .row button{flex:1}
+.progress{height:8px;border-radius:999px;background:var(--soft);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .15s}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.accents{display:flex;gap:10px;flex-wrap:wrap}
+.accents button{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.accents button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--fg)}
 .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:10;
@@ -153,9 +179,13 @@ input[type=text],input[type=url],input[type=search]{width:100%;min-width:0;font:
     </button>
   </div>
   <div class="status">
-    <span id="status">Türkçe konuşma tanıma hazır.</span>
-    <button type="button" class="link" id="clear">Metni temizle</button>
+    <span id="status">Konuşma tanıma hazır.</span>
+    <span class="row" style="gap:8px">
+      <select id="lang" aria-label="Konuşma dili"></select>
+      <button type="button" class="link" id="clear">Metni temizle</button>
+    </span>
   </div>
+  <div class="voice" id="voice"></div>
 
   <nav class="tabs" role="tablist" id="tabs"></nav>
   <section id="panel" role="tabpanel"></section>
@@ -212,6 +242,7 @@ const BASE={
   sign:{text:'',date:false,dateFmt:'long',font:'',color:'auto',size:40,align:'right',pos:'bottom',effect:'none'},
   frame:{style:'none',color:'auto',width:6},
   deco:{emojis:[],layout:'none',size:80},
+  textDX:0,textDY:0,texts:[],anim:{particles:'none',text:'none',bg:'none',dur:5},lang:'tr-TR',
   ratio:'1:1',quality:1,punct:true
 };
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -221,24 +252,24 @@ function deepMerge(base,over){const out=clone(base);if(!over||typeof over!=='obj
   return out;}
 
 const TEMPLATES=[
-  {n:'Doğum günü',p:{bg:{mode:'grad',grad:['#FFD3A5','#FD6585','']},pattern:'confetti',patAlpha:30,font:'Pacifico',textColor:'#FFFFFF',effect:'shadow',box:{style:'none'},deco:{emojis:['🎉','🎂','🎈'],layout:'corners'}}},
-  {n:'Aşk',p:{bg:{mode:'grad',grad:['#FF5F6D','#C9184A',''],gradType:'radial'},pattern:'hearts',patAlpha:16,font:'Great Vibes',textColor:'#FFFFFF',effect:'shadow',size:110,box:{style:'none'},deco:{emojis:['❤️','💖'],layout:'scatter',size:60}}},
+  {n:'Doğum günü',p:{anim:{particles:'confetti',text:'pop'},bg:{mode:'grad',grad:['#FFD3A5','#FD6585','']},pattern:'confetti',patAlpha:30,font:'Pacifico',textColor:'#FFFFFF',effect:'shadow',box:{style:'none'},deco:{emojis:['🎉','🎂','🎈'],layout:'corners'}}},
+  {n:'Aşk',p:{anim:{particles:'hearts',text:'fade'},bg:{mode:'grad',grad:['#FF5F6D','#C9184A',''],gradType:'radial'},pattern:'hearts',patAlpha:16,font:'Great Vibes',textColor:'#FFFFFF',effect:'shadow',size:110,box:{style:'none'},deco:{emojis:['❤️','💖'],layout:'scatter',size:60}}},
   {n:'Günaydın',p:{bg:{mode:'solid',solid:'#FFE066'},pattern:'sunburst',patAlpha:20,font:'Kaushan Script',textColor:'#7A3E00',effect:'none',box:{style:'none'},deco:{emojis:['☀️','☕'],layout:'topBig',size:90}}},
-  {n:'İyi geceler',p:{bg:{mode:'grad',grad:['#0F2027','#203A43','#2C5364']},pattern:'stars',patAlpha:35,font:'Sacramento',textColor:'#FFF3C4',effect:'neon',size:120,box:{style:'none'},deco:{emojis:['🌙','✨'],layout:'corners'}}},
-  {n:'Motivasyon',p:{bg:{mode:'solid',solid:'#111111'},pattern:'none',font:'Bebas Neue',upper:true,fill:'grad',textGrad:['#F9D423','#FF4E50'],effect:'none',letterSpacing:6,box:{style:'none'},frame:{style:'line',color:'#F9D423',width:5}}},
-  {n:'Bayram',p:{bg:{mode:'grad',grad:['#134E5E','#71B280','']},pattern:'flowers',patAlpha:14,font:'Courgette',textColor:'#FFFFFF',effect:'shadow',box:{style:'none'},frame:{style:'ornament',color:'#F6D365',width:5},deco:{emojis:['🌷'],layout:'top',size:70}}},
+  {n:'İyi geceler',p:{anim:{particles:'stars',text:'fade'},bg:{mode:'grad',grad:['#0F2027','#203A43','#2C5364']},pattern:'stars',patAlpha:35,font:'Sacramento',textColor:'#FFF3C4',effect:'neon',size:120,box:{style:'none'},deco:{emojis:['🌙','✨'],layout:'corners'}}},
+  {n:'Motivasyon',p:{anim:{text:'slide',bg:'zoom'},bg:{mode:'solid',solid:'#111111'},pattern:'none',font:'Bebas Neue',upper:true,fill:'grad',textGrad:['#F9D423','#FF4E50'],effect:'none',letterSpacing:6,box:{style:'none'},frame:{style:'line',color:'#F9D423',width:5}}},
+  {n:'Bayram',p:{anim:{particles:'petals',text:'slide'},bg:{mode:'grad',grad:['#134E5E','#71B280','']},pattern:'flowers',patAlpha:14,font:'Courgette',textColor:'#FFFFFF',effect:'shadow',box:{style:'none'},frame:{style:'ornament',color:'#F6D365',width:5},deco:{emojis:['🌷'],layout:'top',size:70}}},
   {n:'Teşekkür',p:{bg:{mode:'solid',solid:'#FFE5EC'},pattern:'bigdots',patAlpha:18,font:'Caveat',textColor:'#B3123F',size:110,effect:'none',box:{style:'card',opacity:70},deco:{emojis:['💐'],layout:'topBig',size:80}}},
-  {n:'Defter',p:{bg:{mode:'solid',solid:'#FFFDF5'},pattern:'lined',patAlpha:35,font:'Caveat',textColor:'#1D3557',size:84,align:'left',valign:'top',effect:'none',box:{style:'none'},frame:{style:'tape',color:'auto'}}},
+  {n:'Defter',p:{anim:{text:'type'},bg:{mode:'solid',solid:'#FFFDF5'},pattern:'lined',patAlpha:35,font:'Caveat',textColor:'#1D3557',size:84,align:'left',valign:'top',effect:'none',box:{style:'none'},frame:{style:'tape',color:'auto'}}},
   {n:'Retro',p:{bg:{mode:'solid',solid:'#F4A261'},pattern:'zigzag',patAlpha:18,font:'Righteous',textColor:'#264653',effect:'3d',effectColor:'#E9C46A',effectSize:60,box:{style:'none'}}},
   {n:'Zarif',p:{bg:{mode:'solid',solid:'#F6F1E7'},pattern:'none',font:'Cinzel',textColor:'#8A6D3B',size:72,letterSpacing:4,effect:'none',box:{style:'none'},frame:{style:'ornament',color:'#B08D57',width:4}}},
   {n:'Kara tahta',p:{bg:{mode:'solid',solid:'#23403A'},pattern:'none',font:'Kalam',textColor:'#F1F1E6',effect:'shadow',box:{style:'none'},frame:{style:'thick',color:'#7B5B3A',width:8}}},
   {n:'Neon',p:{bg:{mode:'solid',solid:'#0B0B12'},pattern:'grid',patAlpha:20,patColor:'#7B2CBF',font:'Monoton',size:80,textColor:'#FF4FD8',effect:'neon',effectSize:70,box:{style:'none'}}},
   {n:'Tebrik',p:{bg:{mode:'grad',grad:['#F7971E','#FFD200','']},pattern:'stars',patAlpha:25,font:'Lobster',textColor:'#FFFFFF',effect:'outline',effectColor:'#7A4100',box:{style:'none'},deco:{emojis:['👏','🎉'],layout:'bottom'}}},
-  {n:'Bebek',p:{bg:{mode:'grad',grad:['#A1C4FD','#C2E9FB','']},pattern:'bubbles',patAlpha:30,font:'Fredoka',textColor:'#2B4C7E',effect:'none',box:{style:'bubble',opacity:75},deco:{emojis:['🍼','⭐'],layout:'corners',size:70}}},
+  {n:'Bebek',p:{anim:{particles:'bubbles',text:'pop'},bg:{mode:'grad',grad:['#A1C4FD','#C2E9FB','']},pattern:'bubbles',patAlpha:30,font:'Fredoka',textColor:'#2B4C7E',effect:'none',box:{style:'bubble',opacity:75},deco:{emojis:['🍼','⭐'],layout:'corners',size:70}}},
   {n:'Dostluk',p:{bg:{mode:'solid',solid:'#C8F2DC'},pattern:'checker',patAlpha:10,font:'Patrick Hand',textColor:'#1B4332',size:100,effect:'none',box:{style:'highlight',color:'#FFE066',opacity:80},deco:{emojis:['🤝','🌈'],layout:'top'}}},
   {n:'Şiir',p:{bg:{mode:'grad',grad:['#232526','#414345','']},pattern:'none',font:'Cormorant Garamond',textColor:'#EDE6DB',size:84,letterSpacing:2,effect:'none',box:{style:'none'},frame:{style:'double',color:'#EDE6DB',width:3},sign:{font:'Parisienne'}}},
   {n:'Polaroid',p:{bg:{mode:'grad',grad:['#FBC2EB','#A6C1EE','']},pattern:'none',font:'Marck Script',textColor:'#FFFFFF',effect:'shadow',box:{style:'none'},frame:{style:'polaroid',color:'auto'}}},
-  {n:'Kış',p:{bg:{mode:'grad',grad:['#E0EAFC','#9AD0F5','']},pattern:'snow',patAlpha:45,font:'Merienda',textColor:'#1D3557',effect:'none',box:{style:'card',opacity:55},frame:{style:'lace',color:'#FFFFFF',width:6}}},
+  {n:'Kış',p:{anim:{particles:'snow'},bg:{mode:'grad',grad:['#E0EAFC','#9AD0F5','']},pattern:'snow',patAlpha:45,font:'Merienda',textColor:'#1D3557',effect:'none',box:{style:'card',opacity:55},frame:{style:'lace',color:'#FFFFFF',width:6}}},
 ];
 
 /* =================== DURUM =================== */
@@ -473,21 +504,88 @@ function paintBg(c,st,W,H,q){
   c.fillRect(0,0,W,H);
 }
 
+/* ---- hareket: parçacıklar ve yazı animasyonları ---- */
+const PARTICLES=[['none','Yok'],['confetti','Konfeti'],['hearts','Uçan kalpler'],['stars','Parıltı'],['snow','Kar yağışı'],['bubbles','Baloncuk'],['petals','Çiçek yaprağı'],['emoji','Seçili emojiler']];
+const TEXT_ANIMS=[['none','Yok'],['type','Daktilo'],['fade','Belirme'],['slide','Kayarak gelme'],['pop','Zıplama'],['pulse','Nabız']];
+const BG_ANIMS=[['none','Sabit'],['zoom','Yavaş yakınlaşma']];
+function drawParticles(c,st,W,H,t,dur){
+  const kind=st.anim.particles,ph=t/dur,rnd=rng(77),U=Math.min(W,H),TAU=Math.PI*2;
+  const n=kind==='stars'?60:kind==='emoji'?18:kind==='confetti'?70:45;
+  const cols=['#FF5E7E','#FFC145','#4CC9F0','#7BD389','#B388EB','#FF8C42'];
+  const ems=st.deco.emojis.length?st.deco.emojis:['❤️','✨'];
+  c.save();
+  for(let i=0;i<n;i++){
+    const x0=rnd(),y0=rnd(),sp=1+Math.floor(rnd()*2),sw=rnd()*TAU,sz=rnd(),rot=rnd()*6;
+    const fall=(y0+ph*sp)%1,rise=((y0-ph*sp)%1+1)%1,sway=Math.sin(ph*TAU*sp+sw);
+    c.save();c.globalAlpha=1;
+    switch(kind){
+      case'confetti':{const s=U*(.009+sz*.011);c.translate(x0*W+sway*U*.03,fall*(H+80)-40);c.rotate(rot+ph*TAU*sp);c.fillStyle=cols[i%6];
+        if(i%3)c.fillRect(-s,-s*.4,s*2,s*.8);else{c.beginPath();c.arc(0,0,s*.6,0,TAU);c.fill();}break;}
+      case'hearts':c.globalAlpha=.85;c.fillStyle=['#FF4D6D','#FF8FA3','#FFFFFF','#E5383B'][i%4];heart(c,x0*W+sway*U*.04,rise*(H+100)-50,U*(.018+sz*.022),sway*.3);break;
+      case'stars':c.globalAlpha=.25+.75*(.5+.5*Math.sin(ph*TAU*sp+sw));c.fillStyle='#FFF6C2';c.shadowColor='#FFF6C2';c.shadowBlur=U*.01;star(c,x0*W,y0*H,U*(.007+sz*.013),rot);break;
+      case'snow':c.globalAlpha=.9;c.fillStyle='#FFFFFF';c.beginPath();c.arc(x0*W+sway*U*.025,fall*(H+40)-20,U*(.004+sz*.008),0,TAU);c.fill();break;
+      case'bubbles':c.globalAlpha=.7;c.strokeStyle='#FFFFFF';c.lineWidth=U*.003;c.beginPath();c.arc(x0*W+sway*U*.03,rise*(H+120)-60,U*(.01+sz*.028),0,TAU);c.stroke();break;
+      case'petals':c.globalAlpha=.9;c.fillStyle=['#FFB7C5','#FFC8DD','#FF8FAB'][i%3];c.translate(x0*W+sway*U*.05,fall*(H+60)-30);c.rotate(rot+ph*TAU*sp);
+        c.beginPath();c.ellipse(0,0,U*(.007+sz*.006),U*(.013+sz*.01),0,0,TAU);c.fill();break;
+      case'emoji':c.font=`${Math.round(U*(.035+sz*.04))}px ${EMOJI_FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#000';
+        c.translate(x0*W+sway*U*.04,rise*(H+140)-70);c.rotate(sway*.25);c.fillText(ems[i%ems.length],0,0);break;
+    }
+    c.restore();
+  }
+  c.restore();
+}
+const easeOut=x=>1-Math.pow(1-x,3);
+const backOut=x=>{const k=1.70158;return 1+(k+1)*Math.pow(x-1,3)+k*Math.pow(x-1,2);};
+const isRTL=s=>/[֐-ࣿ]/.test(s);
+
+function drawEffectText(c,l,x,y,size,effect,ec,k,fill,baseCol){
+  c.save();
+  switch(effect){
+    case'shadow':c.shadowColor=ec?rgba(ec,.75):'rgba(0,0,0,.4)';c.shadowBlur=size*.22*k;c.shadowOffsetY=size*.07*k;break;
+    case'outline':c.lineJoin='round';c.lineWidth=size*.14*k;c.strokeStyle=ec||contrast(baseCol);c.strokeText(l,x,y);break;
+    case'double':c.lineJoin='round';c.lineWidth=size*.3*k;c.strokeStyle=ec||baseCol;c.strokeText(l,x,y);c.lineWidth=size*.15*k;c.strokeStyle=contrast(baseCol);c.strokeText(l,x,y);break;
+    case'neon':c.shadowColor=ec||baseCol;c.shadowBlur=size*.55*k;c.fillStyle=fill;c.fillText(l,x,y);c.fillText(l,x,y);c.shadowBlur=size*.15*k;break;
+    case'3d':{const d=Math.max(1,Math.round(size*.08*k));c.fillStyle=ec||shade(baseCol,lum(baseCol)>.5?-.45:.45);for(let j=d;j>0;j--)c.fillText(l,x+j,y+j);break;}
+    case'long':{const d=Math.round(size*.45*k);c.fillStyle=ec?rgba(ec,.12):'rgba(0,0,0,.08)';for(let j=d;j>0;j-=2)c.fillText(l,x+j,y+j);break;}
+    case'glitch':{const o=size*.045*k;c.fillStyle='rgba(0,229,255,.85)';c.fillText(l,x-o,y);c.fillStyle='rgba(255,0,110,.85)';c.fillText(l,x+o,y);break;}
+  }
+  c.fillStyle=fill;c.fillText(l,x,y);
+  c.restore();
+}
+function selOutline(c,x,y,w,h){c.save();c.globalAlpha=1;c.shadowColor='transparent';c.setLineDash([14,10]);c.lineWidth=5;c.strokeStyle='#0E6B6A';c.strokeRect(x,y,w,h);
+  c.setLineDash([]);c.strokeStyle='#FFFFFF';c.lineWidth=2;c.strokeRect(x-4,y-4,w+8,h+8);c.restore();}
+
+const DUMMY=document.createElement('canvas').getContext('2d');
+const lastBounds={main:null,texts:{}};
+
 function draw(cv,st,q=1,opt={}){
   const[W,H]=dims(st);
-  cv.width=Math.max(1,Math.round(W*q));cv.height=Math.max(1,Math.round(H*q));
+  const pw=Math.max(1,Math.round(W*q)),ph=Math.max(1,Math.round(H*q));
+  if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph;}
   const c=cv.getContext('2d');c.setTransform(q,0,0,q,0,0);c.clearRect(0,0,W,H);
   const dark=isDarkBg(st),tcol=textColorOf(st,dark),mn=Math.min(W,H);
+  const A=st.anim,dur=A.dur,T=opt.t;
+  const tPart=T===undefined?dur*.35:T%dur;
+  const tText=T===undefined?null:(opt.once?Math.min(T,dur):T%dur);
 
-  paintBg(c,st,W,H,q);
-  const pat=PATTERNS[st.pattern];
-  if(pat&&st.pattern!=='none'){const a=st.patAlpha/100;const col=st.patColor==='auto'?(dark?`rgba(255,255,255,${a})`:`rgba(40,20,50,${a*.75})`):rgba(st.patColor,a);
-    c.save();pat.d(c,W,H,col,1080*st.patScale,a);c.restore();}
+  // taban: fon + desen + resimler (yavaş yakınlaşma bunlara uygulanır)
+  c.save();
+  if(A.bg==='zoom'&&T!==undefined){const z=1+.08*(.5-.5*Math.cos(Math.PI*2*tPart/dur));c.translate(W/2,H/2);c.scale(z,z);c.translate(-W/2,-H/2);}
+  if(opt.base)c.drawImage(opt.base,0,0,W,H);
+  else{
+    paintBg(c,st,W,H,q);
+    const pat=PATTERNS[st.pattern];
+    if(pat&&st.pattern!=='none'){const a=st.patAlpha/100;const col=st.patColor==='auto'?(dark?`rgba(255,255,255,${a})`:`rgba(40,20,50,${a*.75})`):rgba(st.patColor,a);
+      c.save();pat.d(c,W,H,col,1080*st.patScale,a);c.restore();}
+    drawLayers(c,st,W,H,opt);
+  }
+  c.restore();
+  if(opt.baseOnly)return;
 
-  drawLayers(c,st,W,H,opt);
   const ins=drawFrame(c,st,W,H,tcol);
   drawDeco(c,st,W,H,ins);
   if(opt.noText)return;
+  if(A.particles!=='none')drawParticles(c,st,W,H,tPart,dur);
 
   // alt not ölçüleri
   const sg=st.sign,signText=[sg.text.trim(),sg.date?fmtDate(sg.dateFmt):''].filter(Boolean).join('  ·  ');
@@ -500,7 +598,7 @@ function draw(cv,st,q=1,opt={}){
   // ana yazı
   const F=fontOf(st.font),lh=st.lineHeight;
   let text=(opt.sample||st.text||'').trim()||'Notunuz burada görünecek…';
-  if(st.upper)text=text.toLocaleUpperCase('tr-TR');
+  if(st.upper)text=text.toLocaleUpperCase(st.lang||'tr-TR');
   const hasLS='letterSpacing'in c;
   let size=st.size,lines,maxW;
   for(;;){
@@ -514,11 +612,26 @@ function draw(cv,st,q=1,opt={}){
   const top0=st.valign==='top'?ay:st.valign==='bottom'?ay+ah-blockH:ay+(ah-blockH)/2;
   const x0=st.align==='center'?cx:st.align==='left'?ax:ax+aw;
   const bx0=st.align==='center'?cx-maxW/2:st.align==='left'?ax:ax+aw-maxW;
+  const lineX=lw=>st.align==='center'?x0-lw/2:st.align==='left'?x0:x0-lw;
+  const dx=(st.textDX||0)*W,dy=(st.textDY||0)*H,bcx=bx0+maxW/2,bcy=top0+blockH/2;
+
+  // yazı animasyonu
+  const P=tText===null?1:tText/dur;let alpha=1,scale=1,slide=0,reveal=1;
+  switch(A.text){
+    case'type':reveal=Math.min(1,P/.6);break;
+    case'fade':alpha=Math.min(1,P/.35);break;
+    case'slide':{const e=easeOut(Math.min(1,P/.35));alpha=e;slide=(1-e)*size*2;break;}
+    case'pop':{const e=Math.min(1,P/.3);scale=Math.max(.01,backOut(e));alpha=Math.min(1,e*3);break;}
+    case'pulse':scale=1+.04*Math.sin(Math.PI*2*(tText===null?0:tText/dur)*2);break;
+  }
+  if(tText===null){alpha=1;scale=1;slide=0;reveal=1;}
 
   c.save();
+  c.translate(dx,dy+slide);
   c.translate(cx,cy);c.rotate(st.tilt*Math.PI/180);c.translate(-cx,-cy);
+  if(scale!==1){c.translate(bcx,bcy);c.scale(scale,scale);c.translate(-bcx,-bcy);}
+  c.globalAlpha=alpha;
 
-  // arka kutu
   const B=st.box,bAlpha=B.opacity/100;
   if(B.style!=='none'){
     const bcol=B.color!=='auto'?B.color:B.style==='highlight'?(lum(tcol)>.5?'#000000':'#FFE066'):(lum(tcol)>.5?'#000000':'#FFFFFF');
@@ -528,37 +641,51 @@ function draw(cv,st,q=1,opt={}){
       const bx=bx0-cp,by=top0-cp*.6,bw=maxW+cp*2,bh=blockH+cp*1.2;
       c.shadowColor='rgba(0,0,0,.12)';c.shadowBlur=30;rr(c,bx,by,bw,bh,B.radius);c.fill();
       if(B.style==='bubble'){c.shadowBlur=0;c.beginPath();c.moveTo(bx+bw*.16,by+bh-1);c.lineTo(bx+bw*.1,by+bh+size*.7);c.lineTo(bx+bw*.32,by+bh-1);c.closePath();c.fill();}
-    }else if(B.style==='band'){c.fillRect(ins.l,top0-cp*.6,W-ins.l-ins.r,blockH+cp*1.2);}
+    }else if(B.style==='band'){c.fillRect(ins.l-dx,top0-cp*.6,W-ins.l-ins.r,blockH+cp*1.2);}
     else if(B.style==='highlight'){lines.forEach((l,i)=>{if(!l)return;const lw=c.measureText(l).width,y=top0+size*lh*(i+.5);
-      const lx=st.align==='center'?x0-lw/2:st.align==='left'?x0:x0-lw;rr(c,lx-size*.15,y-size*.2,lw+size*.3,size*.62,size*.12);c.fill();});}
+      rr(c,lineX(lw)-size*.15,y-size*.2,lw+size*.3,size*.62,size*.12);c.fill();});}
     c.restore();
   }
 
-  // dolgu
   let fill=tcol;
   if(st.fill==='grad'){const g=c.createLinearGradient(0,top0,0,top0+blockH);g.addColorStop(0,st.textGrad[0]);g.addColorStop(1,st.textGrad[1]);fill=g;}
   else if(st.fill==='rainbow'){const g=c.createLinearGradient(bx0,0,bx0+maxW,0);RAINBOW.forEach((col,i)=>g.addColorStop(i/(RAINBOW.length-1),col));fill=g;}
   const baseCol=st.fill==='solid'?tcol:st.fill==='grad'?st.textGrad[0]:'#6A4C93';
   const ec=st.effectColor==='auto'?null:st.effectColor,k=st.effectSize/50;
 
-  c.textAlign=st.align;c.textBaseline='middle';
+  c.textAlign='left';c.textBaseline='middle';c.direction=isRTL(text)?'rtl':'ltr';
+  if(c.direction==='rtl')c.textAlign='right';
+  const total=lines.reduce((s,l)=>s+Array.from(l).length,0);let left=Math.floor(total*reveal+.0001);
   lines.forEach((l,i)=>{
-    if(!l)return;const y=top0+size*lh*(i+.5);
-    c.save();
-    switch(st.effect){
-      case'shadow':c.shadowColor=ec?rgba(ec,.75):'rgba(0,0,0,.4)';c.shadowBlur=size*.22*k;c.shadowOffsetY=size*.07*k;break;
-      case'outline':c.lineJoin='round';c.lineWidth=size*.14*k;c.strokeStyle=ec||contrast(baseCol);c.strokeText(l,x0,y);break;
-      case'double':c.lineJoin='round';c.lineWidth=size*.3*k;c.strokeStyle=ec||baseCol;c.strokeText(l,x0,y);c.lineWidth=size*.15*k;c.strokeStyle=contrast(baseCol);c.strokeText(l,x0,y);break;
-      case'neon':c.shadowColor=ec||baseCol;c.shadowBlur=size*.55*k;c.fillStyle=fill;c.fillText(l,x0,y);c.fillText(l,x0,y);c.shadowBlur=size*.15*k;break;
-      case'3d':{const d=Math.max(1,Math.round(size*.08*k));c.fillStyle=ec||shade(baseCol,lum(baseCol)>.5?-.45:.45);for(let j=d;j>0;j--)c.fillText(l,x0+j,y+j);break;}
-      case'long':{const d=Math.round(size*.45*k);c.fillStyle=ec?rgba(ec,.12):'rgba(0,0,0,.08)';for(let j=d;j>0;j-=2)c.fillText(l,x0+j,y+j);break;}
-      case'glitch':{const o=size*.045*k;c.globalCompositeOperation='source-over';c.fillStyle='rgba(0,229,255,.85)';c.fillText(l,x0-o,y);c.fillStyle='rgba(255,0,110,.85)';c.fillText(l,x0+o,y);break;}
-    }
-    c.fillStyle=fill;c.fillText(l,x0,y);
-    c.restore();
+    if(!l||left<=0)return;
+    const chars=Array.from(l),show=chars.length<=left?l:chars.slice(0,left).join('');left-=chars.length;
+    const lw=c.measureText(l).width,lx=lineX(lw),y=top0+size*lh*(i+.5);
+    drawEffectText(c,show,c.direction==='rtl'?lx+lw:lx,y,size,st.effect,ec,k,fill,baseCol);
   });
+  if(opt.preview){
+    lastBounds.main={cx:bcx+dx,cy:bcy+dy,w:maxW+size*.6,h:blockH+size*.3,rot:st.tilt,pivot:{x:cx+dx,y:cy+dy}};
+    if(opt.selText==='main')selOutline(c,bx0-size*.3,top0-size*.15,maxW+size*.6,blockH+size*.3);
+  }
   c.restore();
   if(hasLS)c.letterSpacing='0px';
+  c.direction='ltr';
+
+  // ek yazılar
+  for(const tx of st.texts||[]){
+    const TF=fontOf(tx.font||st.font),ts=tx.size,tl=(tx.text||'').split('\n');
+    c.save();c.font=fontCss(TF,ts);c.textAlign='center';c.textBaseline='middle';c.direction=isRTL(tx.text||'')?'rtl':'ltr';
+    const widths=tl.map(l=>c.measureText(l).width),tw=Math.max(10,...widths),th=tl.length*ts*1.2;
+    const X=tx.x*W,Y=tx.y*H;
+    c.translate(X,Y);c.rotate(tx.rot*Math.PI/180);c.globalAlpha=alpha;
+    const col=tx.color==='auto'?tcol:tx.color;
+    if(tx.box){c.save();c.fillStyle=rgba(tx.boxColor==='auto'?(lum(col)>.5?'#000000':'#FFFFFF'):tx.boxColor,.6);rr(c,-tw/2-ts*.4,-th/2-ts*.25,tw+ts*.8,th+ts*.5,ts*.3);c.fill();c.restore();}
+    tl.forEach((l,i)=>{if(l)drawEffectText(c,l,0,-th/2+ts*1.2*(i+.5),ts,tx.effect,null,1,col,col);});
+    if(opt.preview){
+      lastBounds.texts[tx.id]={cx:X,cy:Y,w:tw+ts*.8,h:th+ts*.5,rot:tx.rot};
+      if(opt.selText===tx.id)selOutline(c,-tw/2-ts*.45,-th/2-ts*.3,tw+ts*.9,th+ts*.6);
+    }
+    c.restore();
+  }
 
   // alt not
   if(signText){
@@ -583,7 +710,8 @@ function draw(cv,st,q=1,opt={}){
 /* =================== AKIŞ: çizim, kayıt, geçmiş =================== */
 let raf=0,tIdle=0,exportBlob=null,exportKey='';
 const keyOf=()=>JSON.stringify(state)+'|'+Object.keys(IMGS).length;
-function drawPreview(){draw(canvas,state,1,{preview:true,sel:selectedLayer});}
+function drawPreview(){if(animOn()){if(!animRaf){animStart=performance.now();animRaf=requestAnimationFrame(animTick);}return;}
+  cancelAnimationFrame(animRaf);animRaf=0;draw(canvas,state,1,previewOpts());}
 function changed(){
   cancelAnimationFrame(raf);raf=requestAnimationFrame(drawPreview);
   clearTimeout(tIdle);tIdle=setTimeout(()=>{persist();pushHist();makeBlob();},500);
@@ -599,10 +727,10 @@ function updUndo(){$('#undo').disabled=hi<=0;$('#redo').disabled=hi>=hist.length
 function restore(s){state=deepMerge(BASE,JSON.parse(s));afterLoad(false);}
 $('#undo').onclick=()=>{clearTimeout(tIdle);pushHist();if(hi>0){hi--;restore(hist[hi]);updUndo();}};
 $('#redo').onclick=()=>{if(hi<hist.length-1){hi++;restore(hist[hi]);updUndo();}};
-function afterLoad(record=true){ta.value=state.text;if(!state.layers.some(l=>l.id===selectedLayer))selectedLayer=null;ensureImages();updTouch();ensureFonts().then(()=>drawPreview());buildPanel(activeTab);changed();if(!record){clearTimeout(tIdle);tIdle=setTimeout(()=>{persist();makeBlob();},300);}}
+function afterLoad(record=true){ta.value=state.text;langSel.value=state.lang||'tr-TR';if(!state.layers.some(l=>l.id===selectedLayer))selectedLayer=null;if(selectedText&&selectedText!=='main'&&!state.texts.some(t=>t.id===selectedText))selectedText=null;ensureImages();updTouch();ensureFonts().then(()=>drawPreview());buildPanel(activeTab);changed();if(!record){clearTimeout(tIdle);tIdle=setTimeout(()=>{persist();makeBlob();},300);}}
 
 function ensureFonts(st=state){
-  const fs=[fontOf(st.font),fontOf(st.sign.font||st.font)];
+  const fs=[fontOf(st.font),fontOf(st.sign.font||st.font),...(st.texts||[]).map(t=>fontOf(t.font||st.font))];
   return Promise.all(fs.map(F=>document.fonts.load(fontCss(F,40),'ĞÜŞİÖÇğüşıöç').catch(()=>{})));
 }
 if(document.fonts)document.fonts.addEventListener('loadingdone',()=>{drawPreview();exportKey='';});
@@ -666,9 +794,9 @@ function tileGrid(items,onPick,size=150){
 }
 
 /* =================== PANELLER =================== */
-const TABS=[['sablon','Şablon'],['fon','Fon'],['resim','Resim'],['desen','Desen'],['yazi','Yazı'],['efekt','Efekt'],['altnot','Alt not'],['sus','Süs'],['cerceve','Çerçeve'],['olcu','Ölçü'],['notlar','Notlarım']];
+const TABS=[['sablon','Şablon'],['fon','Fon'],['resim','Resim'],['desen','Desen'],['yazi','Yazı'],['efekt','Efekt'],['ekyazi','Ek yazı'],['hareket','Hareket'],['altnot','Alt not'],['sus','Süs'],['cerceve','Çerçeve'],['ayar','Ayarlar'],['notlar','Notlarım']];
 let activeTab='sablon';try{activeTab=localStorage.getItem('sesliNotTab')||'sablon';}catch(e){}
-if(!TABS.some(t=>t[0]===activeTab))activeTab='sablon';
+if(activeTab==='olcu')activeTab='ayar';if(!TABS.some(t=>t[0]===activeTab))activeTab='sablon';
 const P=$('#panel');
 
 const PANELS={
@@ -751,10 +879,11 @@ const PANELS={
     if(state.fill==='grad'){const pick=i=>{const inp=el('input',{type:'color',id:'f_tg'+i});inp.value=state.textGrad[i];inp.oninput=()=>{state.textGrad[i]=inp.value;changed();};return el('label',{},inp,(i+1)+'. renk');};
       P.append(field('Geçiş renkleri',el('div',{class:'pickers'},pick(0),pick(1))));}
     P.append(rangeRow('Yazı boyutu (en fazla)','size',30,200,2,v=>v+' px'),rangeRow('Satır aralığı','lineHeight',.9,2,.05,v=>(+v).toFixed(2)),
-      rangeRow('Harf aralığı','letterSpacing',-5,40,1,v=>v),rangeRow('Eğim','tilt',-15,15,1,v=>v+'°'));
+      rangeRow('Harf aralığı','letterSpacing',-5,40,1,v=>v),rangeRow('Eğim','tilt',-30,30,1,v=>v+'°'));
     P.append(segRow('Yatay hizalama','align',[['left','Sola'],['center','Ortaya'],['right','Sağa']]),
       segRow('Dikey konum','valign',[['top','Üstte'],['middle','Ortada'],['bottom','Altta']]),toggleRow('TÜMÜ BÜYÜK HARF','upper'));
-    P.append(el('p',{class:'hint',text:'Uzun metinlerde yazı, karta sığacak kadar kendiliğinden küçülür.'}));
+    P.append(el('p',{class:'hint',text:'Uzun metinlerde yazı, karta sığacak kadar kendiliğinden küçülür. Ana yazıyı önizlemede parmağınızla sürükleyebilir, iki parmakla büyütüp döndürebilirsiniz.'}));
+    if(state.textDX||state.textDY)P.append(el('button',{type:'button',class:'wide',text:'Yazıyı yerine (ortaya) geri al',onclick:()=>{state.textDX=0;state.textDY=0;changed();buildPanel('yazi');}}));
   },
   efekt(){
     P.append(segRow('Yazı efekti','effect',[['none','Yok'],['shadow','Gölge'],['outline','Kontur'],['double','Çift kontur'],['neon','Neon'],['3d','3B'],['long','Uzun gölge'],['glitch','Glitch']]));
@@ -793,14 +922,73 @@ const PANELS={
     P.append(colorRow('Çerçeve rengi','frame.color',['#FFFFFF','#000000','#B08D57','#F6D365','#E63946','#FF8FA3','#7B5B3A','#1D3557'],{auto:true}));
     P.append(rangeRow('Çizgi kalınlığı','frame.width',2,20,1,v=>v+' px'));
   },
-  olcu(){
+  ekyazi(){
+    P.append(el('p',{class:'hint',text:'Başlık, isim, tarih gibi ek yazılar ekleyin; her birinin yazı tipi, rengi ve boyutu ayrıdır. Önizlemede parmakla sürükleyin, iki parmakla büyütüp döndürün.'}));
+    P.append(el('button',{type:'button',class:'wide accent',text:'Yeni yazı ekle',onclick:()=>{
+      const t={id:'T'+Date.now().toString(36),text:'Yeni yazı',font:'Lobster',color:'auto',size:80,x:.5,y:.2+(state.texts.length%4)*.15,rot:0,effect:'shadow',box:false,boxColor:'auto'};
+      state.texts.push(t);select('text',t.id);ensureFonts().then(drawPreview);changed();buildPanel('ekyazi');
+      setTimeout(()=>{const i=document.getElementById('f_tx');if(i){i.focus();i.select();}},50);}}));
+    if(!state.texts.length)return;
+    const list=el('div',{class:'chips'});
+    state.texts.forEach(t=>list.append(el('button',{type:'button','aria-pressed':String(t.id===selectedText),style:t.id===selectedText?'background:var(--accent);color:var(--accent-fg)':'',
+      text:(t.text||'(boş)').split('\n')[0].slice(0,24),onclick:()=>{select('text',t.id);drawPreview();buildPanel('ekyazi');}})));
+    P.append(field(`Ek yazılar (${state.texts.length})`,list));
+    const t=state.texts.find(x=>x.id===selectedText);
+    if(!t){P.append(el('p',{class:'hint',text:'Düzenlemek için yukarıdan ya da önizlemeden bir yazıya dokunun.'}));return;}
+    const i=state.texts.indexOf(t),base='texts.'+i+'.';
+    const area=el('textarea',{id:'f_tx',style:'min-height:70px'});area.value=t.text;area.oninput=()=>{t.text=area.value;changed();};
+    const mic=el('button',{type:'button',class:'mini',text:'Sesle yaz',onclick:()=>dictateInto(area,v=>{t.text=v;changed();})});
+    P.append(field('Yazı',el('div',{class:'row',style:'flex-wrap:nowrap;align-items:stretch'},area,mic)));
+    const act=(label,fn,cls='')=>el('button',{type:'button',class:'mini '+cls,text:label,onclick:()=>{fn();changed();buildPanel('ekyazi');}});
+    P.append(el('div',{class:'actions'},act('Ortala',()=>{t.x=.5;t.y=.5;}),act('Çoğalt',()=>{const d=clone(t);d.id='T'+Date.now().toString(36);d.y=Math.min(1,t.y+.08);state.texts.push(d);select('text',d.id);}),
+      act('Sil',()=>{state.texts.splice(i,1);select(null,null);},'danger')));
+    P.append(colorRow('Renk',base+'color',TEXTCOLS,{auto:true}),rangeRow('Boyut',base+'size',14,300,1,v=>v+' px'),rangeRow('Döndür',base+'rot',-180,180,1,v=>v+'°'),
+      segRow('Efekt',base+'effect',[['none','Yok'],['shadow','Gölge'],['outline','Kontur'],['neon','Neon'],['3d','3B'],['glitch','Glitch']]),
+      toggleRow('Arkasına yarı saydam kutu koy',base+'box'));
+    P.append(fontGrid('Yazı tipi',base+'font'));
+  },
+  hareket(){
+    P.append(el('p',{class:'hint',text:'Kartı hareketli yapın ve GIF ya da video olarak gönderin. PNG gönderiminde hareket olmaz, kartın tek bir karesi gönderilir.'}));
+    P.append(segRow('Uçuşan süsler','anim.particles',PARTICLES),segRow('Yazı hareketi','anim.text',TEXT_ANIMS),segRow('Fon hareketi','anim.bg',BG_ANIMS),
+      rangeRow('Süre','anim.dur',2,10,1,v=>v+' sn'));
+    if(state.anim.particles==='emoji'&&!state.deco.emojis.length)P.append(el('p',{class:'hint',text:'Süs sekmesinden emoji seçin; seçilmezse kalp ve parıltı kullanılır.'}));
+    const out=el('div',{class:'field'},el('div',{class:'label'},el('span',{text:'Hareketli olarak gönder'})));
+    const withAudio=el('input',{type:'checkbox',id:'f_vid_audio'});withAudio.checked=!!voice.blob;withAudio.disabled=!voice.blob;
+    out.append(el('div',{class:'two'},
+      el('button',{type:'button',class:'wide accent',text:'Video oluştur',onclick:()=>runExport('video',withAudio.checked)}),
+      el('button',{type:'button',class:'wide',text:'GIF oluştur',onclick:()=>runExport('gif')})));
+    out.append(el('label',{class:'chk'},withAudio,voice.blob?'Sesli mesajı videoya ekle':'Sesli mesaj eklemek için önce yukarıdan ses kaydedin'));
+    out.append(el('div',{class:'progress',id:'mediaProg'},el('i')),el('p',{class:'hint',id:'mediaMsg',text:mediaBusy?'Hazırlanıyor…':'Video sesi de taşır ve WhatsApp’ta oynar; GIF sessizdir ama her yerde açılır. Sesli videonun süresi ses kaydı kadar olur.'}));
+    if(lastMedia){
+      const isGif=lastMedia.blob.type.includes('gif');
+      out.append(el('div',{class:'media-out'},isGif?el('img',{src:lastMedia.url,alt:'Hazırlanan GIF'}):el('video',{src:lastMedia.url,controls:'',playsinline:'',loop:''}),
+        el('p',{class:'hint',text:`${lastMedia.name} · ${(lastMedia.blob.size/1048576).toFixed(1)} MB`}),
+        el('div',{class:'row'},el('button',{type:'button',class:'wide accent',text:'Gönder',onclick:shareMedia}),el('button',{type:'button',class:'wide',text:'İndir',onclick:()=>downloadAs(lastMedia.blob,lastMedia.name)}))));
+    }
+    P.append(out);
+  },
+  ayar(){
     P.append(segRow('Görsel ölçüsü','ratio',RATIOS.map(r=>[r[0],`${r[1]} ${r[0]}`])));
     P.append(segRow('PNG kalitesi','quality',[[1,'Standart (1080 px)'],[2,'Yüksek (2160 px)']]));
-    P.append(toggleRow('Sesli noktalama (nokta, virgül, soru işareti…)','punct'));
+    const uiSeg=(label,key,items)=>{const box=el('div',{class:'seg'});items.forEach(([v,l])=>{const b=el('button',{type:'button','aria-pressed':String(ui[key]===v),text:l});
+      b.onclick=()=>{ui[key]=v;applyUI();markIn(box,b);};box.append(b);});return field(label,box);};
+    P.append(uiSeg('Uygulama görünümü','theme',[['system','Telefona göre'],['light','Açık'],['dark','Koyu']]));
+    const ac=el('div',{class:'accents'});
+    Object.entries(ACCENTS).forEach(([k,a])=>{const b=el('button',{type:'button','aria-label':a[0]+' renk','aria-pressed':String(ui.accent===k),title:a[0],style:`background:linear-gradient(135deg,${a[1]} 50%,${a[2]} 50%)`});
+      b.onclick=()=>{ui.accent=k;applyUI();markIn(ac,b);};ac.append(b);});
+    P.append(field('Uygulama rengi',ac));
+    P.append(field('Konuşma dili',el('p',{class:'hint',text:'Yazı alanının altındaki dil seçicisinden değiştirebilirsiniz. Şu an: '+langName()+'.'})));
+    P.append(toggleRow('Sesli noktalama (Türkçe: nokta, virgül, soru işareti…)','punct'));
     P.append(el('p',{class:'hint',text:'Sesli komutlar: “nokta”, “virgül”, “soru işareti”, “ünlem”, “iki nokta üst üste”, “noktalı virgül”, “tire”, “üç nokta”, “yeni satır”, “yeni paragraf”, “kalp emojisi”, “gülen yüz”.'}));
+    const inst=el('div',{class:'field'},el('div',{class:'label'},el('span',{text:'Uygulama olarak yükle'})));
+    if(isStandalone())inst.append(el('p',{class:'hint',text:'Uygulama olarak açıldı. İnternet yokken de açılır; konuşma tanıma ve görsel arama için internet gerekir.'}));
+    else if(installPrompt)inst.append(el('button',{type:'button',class:'wide accent',text:'Telefona uygulama olarak yükle',onclick:async()=>{installPrompt.prompt();const r=await installPrompt.userChoice;if(r.outcome==='accepted')installPrompt=null;buildPanel('ayar');}}));
+    else if(isIOS)inst.append(el('p',{class:'hint',text:'iPhone’da: Safari’de alttaki Paylaş düğmesine, sonra “Ana Ekrana Ekle”ye dokunun.'}));
+    else inst.append(el('p',{class:'hint',text:'Tarayıcı menüsünden (⋮) “Ana ekrana ekle” ya da “Uygulamayı yükle”yi seçin. Yüklenince internet yokken de açılır.'}));
+    P.append(inst);
     P.append(el('button',{type:'button',class:'wide',text:'Görseli panoya kopyala',onclick:copyImage}));
     const reset=el('button',{type:'button',class:'wide danger',text:'Tüm tasarımı sıfırla'});
-    reset.onclick=()=>{if(reset.dataset.sure){state=deepMerge(BASE,{text:state.text});afterLoad();toast('Tasarım sıfırlandı.');}else{reset.dataset.sure='1';reset.textContent='Emin misiniz? Tekrar dokunun';setTimeout(()=>{delete reset.dataset.sure;reset.textContent='Tüm tasarımı sıfırla';},3000);}};
+    reset.onclick=()=>{if(reset.dataset.sure){state=deepMerge(BASE,{text:state.text,lang:state.lang});afterLoad();toast('Tasarım sıfırlandı.');}else{reset.dataset.sure='1';reset.textContent='Emin misiniz? Tekrar dokunun';setTimeout(()=>{delete reset.dataset.sure;reset.textContent='Tüm tasarımı sıfırla';},3000);}};
     P.append(reset);
   },
   notlar(){
@@ -827,7 +1015,7 @@ function buildPanel(k){if(k!==activeTab)return;P.innerHTML='';PANELS[k]();}
 
 /* =================== ŞABLON / RASTGELE =================== */
 function applyTemplate(st,t){
-  const keep={text:st.text,sign:{text:st.sign.text,date:st.sign.date,dateFmt:st.sign.dateFmt},ratio:st.ratio,quality:st.quality,punct:st.punct,layers:st.layers,showCredit:st.showCredit,bg:{img:st.bg.img,credit:st.bg.credit}};
+  const keep={text:st.text,sign:{text:st.sign.text,date:st.sign.date,dateFmt:st.sign.dateFmt},ratio:st.ratio,quality:st.quality,punct:st.punct,layers:st.layers,texts:st.texts,lang:st.lang,showCredit:st.showCredit,bg:{img:st.bg.img,credit:st.bg.credit}};
   return deepMerge(deepMerge(BASE,t.p),keep);
 }
 function randomize(){
@@ -967,38 +1155,58 @@ function searchUI(target){
     el('p',{class:'hint',text:'Görseller Openverse, Wikimedia Commons ve Unsplash (Picsum) üzerinden gelir ve ücretsiz lisanslıdır. Bazı lisanslar görsel sahibinin adının yazılmasını ister; bu yüzden ad, kartın köşesine otomatik eklenir (kapatabilirsiniz).'}));
 }
 
-/* ---- resimleri önizlemede parmakla taşıma / büyütme / döndürme ---- */
-let selectedLayer=null,gest=null,moveRaf=0;const ptrs=new Map();
+/* ---- önizlemede parmakla taşıma / büyütme / döndürme (resimler, ana yazı, ek yazılar) ---- */
+let selectedLayer=null,selectedText=null,gest=null,moveRaf=0;const ptrs=new Map();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const center=p=>({x:p.reduce((s,q)=>s+q.x,0)/p.length,y:p.reduce((s,q)=>s+q.y,0)/p.length});
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),ang=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x);
 function toCv(e){const r=canvas.getBoundingClientRect(),[W,H]=dims(state);return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
-function updTouch(){canvas.style.touchAction=state.layers.length?'none':'';canvas.style.cursor=state.layers.length?'grab':'';}
-function hitLayer(st,px,py){const[W]=dims(st);
+function updTouch(){canvas.style.touchAction='none';canvas.style.cursor='grab';}
+function inBox(b,px,py){if(!b)return false;const a=-b.rot*Math.PI/180,dx=px-b.cx,dy=py-b.cy,lx=dx*Math.cos(a)-dy*Math.sin(a),ly=dx*Math.sin(a)+dy*Math.cos(a);
+  return Math.abs(lx)<=b.w/2+12&&Math.abs(ly)<=b.h/2+12;}
+function hitLayer(st,px,py){const[W,H]=dims(st);
   for(let i=st.layers.length-1;i>=0;i--){const l=st.layers[i],im=imgOf(l.img);if(!im)continue;const{w,h}=layerBox(l,W,im);
-    const a=-l.rot*Math.PI/180,dx=px-l.x*W,dy=py-l.y*dims(st)[1],lx=dx*Math.cos(a)-dy*Math.sin(a),ly=dx*Math.sin(a)+dy*Math.cos(a);
-    if(Math.abs(lx)<=w/2+l.border+12&&Math.abs(ly)<=h/2+l.border+12)return l;}
+    if(inBox({cx:l.x*W,cy:l.y*H,w:w+l.border*2,h:h+l.border*2,rot:l.rot},px,py))return l;}
   return null;}
-function startGesture(){const l=state.layers.find(x=>x.id===selectedLayer);if(!l){gest=null;return;}const p=[...ptrs.values()],[W,H]=dims(state);
-  gest={l,x0:l.x,y0:l.y,w0:l.w,r0:l.rot,c0:center(p),d0:p.length>1?dist(p[0],p[1]):0,a0:p.length>1?ang(p[0],p[1]):0,W,H};}
+function hitAny(px,py){
+  for(let i=state.texts.length-1;i>=0;i--){const t=state.texts[i];if(inBox(lastBounds.texts[t.id],px,py))return{kind:'text',id:t.id};}
+  const l=hitLayer(state,px,py);if(l)return{kind:'layer',id:l.id};
+  if(inBox(lastBounds.main,px,py))return{kind:'text',id:'main'};
+  return null;
+}
+// seçili nesneyi ve hangi alanlarının değişeceğini döndürür
+function selObj(){
+  if(selectedText==='main')return{o:state,kx:'textDX',ky:'textDY',ks:'size',kr:'tilt',sMin:30,sMax:200,rMin:-30,rMax:30,off:true};
+  if(selectedText){const t=state.texts.find(x=>x.id===selectedText);return t&&{o:t,kx:'x',ky:'y',ks:'size',kr:'rot',sMin:14,sMax:300,rMin:-180,rMax:180};}
+  if(selectedLayer){const l=state.layers.find(x=>x.id===selectedLayer);return l&&{o:l,kx:'x',ky:'y',ks:'w',kr:'rot',sMin:.05,sMax:2,rMin:-180,rMax:180};}
+  return null;
+}
+function select(kind,id){selectedLayer=kind==='layer'?id:null;selectedText=kind==='text'?id:null;}
+const panelFor=()=>selectedLayer?'resim':selectedText==='main'?'yazi':selectedText?'ekyazi':null;
+function startGesture(){const s=selObj();if(!s){gest=null;return;}const p=[...ptrs.values()],[W,H]=dims(state),o=s.o;
+  gest={s,x0:o[s.kx]||0,y0:o[s.ky]||0,s0:o[s.ks],r0:o[s.kr]||0,c0:center(p),d0:p.length>1?dist(p[0],p[1]):0,a0:p.length>1?ang(p[0],p[1]):0,W,H};}
 canvas.addEventListener('pointerdown',e=>{
   const p=toCv(e);
-  if(!ptrs.size){const hit=hitLayer(state,p.x,p.y);
-    if(!hit){if(selectedLayer){selectedLayer=null;drawPreview();if(activeTab==='resim')buildPanel('resim');}return;}
-    if(selectedLayer!==hit.id){selectedLayer=hit.id;if(activeTab==='resim')buildPanel('resim');}}
-  else if(!gest)return;
+  if(!ptrs.size){
+    const hit=hitAny(p.x,p.y);
+    if(!hit){if(selectedLayer||selectedText){const pf=panelFor();select(null,null);drawPreview();if(pf&&activeTab===pf)buildPanel(pf);}return;}
+    select(hit.kind,hit.id); // panel, parmak kalkınca yenilenir (basılıyken sayfa kaymasın)
+  }else if(!gest)return;
   e.preventDefault();ptrs.set(e.pointerId,p);try{canvas.setPointerCapture(e.pointerId);}catch(_){}startGesture();drawPreview();});
 canvas.addEventListener('pointermove',e=>{
   if(!ptrs.has(e.pointerId)||!gest)return;ptrs.set(e.pointerId,toCv(e));
-  const p=[...ptrs.values()],g=gest,c=center(p);
-  g.l.x=clamp(g.x0+(c.x-g.c0.x)/g.W,-.2,1.2);g.l.y=clamp(g.y0+(c.y-g.c0.y)/g.H,-.2,1.2);
-  if(p.length>1&&g.d0){g.l.w=clamp(g.w0*dist(p[0],p[1])/g.d0,.05,2);g.l.rot=Math.round(g.r0+(ang(p[0],p[1])-g.a0)*180/Math.PI);}
+  const p=[...ptrs.values()],g=gest,s=g.s,o=s.o,c=center(p);
+  const lim=s.off?[-.5,.5]:[-.2,1.2];
+  o[s.kx]=clamp(g.x0+(c.x-g.c0.x)/g.W,lim[0],lim[1]);o[s.ky]=clamp(g.y0+(c.y-g.c0.y)/g.H,lim[0],lim[1]);
+  if(p.length>1&&g.d0){o[s.ks]=clamp(g.s0*dist(p[0],p[1])/g.d0,s.sMin,s.sMax);if(s.ks==='size')o[s.ks]=Math.round(o[s.ks]);
+    o[s.kr]=clamp(Math.round(g.r0+(ang(p[0],p[1])-g.a0)*180/Math.PI),s.rMin,s.rMax);}
   cancelAnimationFrame(moveRaf);moveRaf=requestAnimationFrame(drawPreview);});
 const endPtr=e=>{if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);
-  if(ptrs.size)startGesture();else{gest=null;changed();if(activeTab==='resim')buildPanel('resim');}};
+  if(ptrs.size)startGesture();else{gest=null;changed();if(['resim','ekyazi','yazi'].includes(activeTab))buildPanel(activeTab);}};
 canvas.addEventListener('pointerup',endPtr);canvas.addEventListener('pointercancel',endPtr);
-canvas.addEventListener('wheel',e=>{const l=state.layers.find(x=>x.id===selectedLayer);if(!l)return;const p=toCv(e);if(hitLayer(state,p.x,p.y)!==l)return;
-  e.preventDefault();l.w=clamp(l.w*(e.deltaY<0?1.06:1/1.06),.05,2);changed();},{passive:false});
+canvas.addEventListener('wheel',e=>{const s=selObj();if(!s)return;const p=toCv(e),h=hitAny(p.x,p.y);
+  if(!h||(h.kind==='layer'?selectedLayer:selectedText)!==h.id)return;
+  e.preventDefault();const f=e.deltaY<0?1.06:1/1.06;s.o[s.ks]=clamp(s.o[s.ks]*f,s.sMin,s.sMax);if(s.ks==='size')s.o[s.ks]=Math.round(s.o[s.ks]);changed();},{passive:false});
 
 /* ---- panodan görsel yapıştırma ---- */
 document.addEventListener('paste',e=>{
@@ -1021,21 +1229,30 @@ $('#clear').onclick=()=>{ta.value='';state.text='';changed();ta.focus();};
 
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2800);}
 
+const LANGS=[['tr-TR','Türkçe'],['en-US','English'],['de-DE','Deutsch'],['fr-FR','Français'],['es-ES','Español'],['it-IT','Italiano'],['nl-NL','Nederlands'],
+  ['ru-RU','Русский'],['ar-SA','العربية'],['fa-IR','فارسی'],['az-AZ','Azərbaycanca'],['el-GR','Ελληνικά'],['bg-BG','Български'],['ja-JP','日本語']];
+const langSel=$('#lang');
+LANGS.forEach(([v,l])=>langSel.append(el('option',{value:v,text:l})));
+langSel.value=state.lang||'tr-TR';
+langSel.onchange=()=>{state.lang=langSel.value;changed();
+  if(listening){stopListening(true);startListening();}else $('#status').textContent=`Konuşma dili: ${LANGS.find(x=>x[0]===state.lang)[1]}`;};
+const langName=()=>(LANGS.find(x=>x[0]===state.lang)||LANGS[0])[1];
+
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 const isAndroid=/Android/i.test(navigator.userAgent);
 let rec=null,listening=false,baseText='';
 const VOICE=[['yeni paragraf','\n\n'],['yeni satır','\n'],['alt satır','\n'],['soru işareti','?'],['ünlem işareti','!'],['ünlem','!'],['iki nokta üst üste',':'],
   ['noktalı virgül',';'],['üç nokta','…'],['virgül',','],['nokta','.'],['tire',' -'],['kalp emojisi','❤️'],['gülen yüz','😊']];
 function applyVoicePunct(s){
-  if(!state.punct)return s;
+  if(!state.punct||!(state.lang||'tr-TR').startsWith('tr'))return s;
   for(const[w,p]of VOICE)s=s.replace(new RegExp(`(^|\\s)${w}(?=\\s|$)`,'gi'),p);
   return s.replace(/[ \t]+([.,!?…:;])/g,'$1').replace(/[ \t]*\n[ \t]*/g,'\n');
 }
-function tidy(s){s=s.replace(/[ \t]{2,}/g,' ');return s.replace(/(^|[.!?…]\s+|\n)(\p{Ll})/gu,(m,a,b)=>a+b.toLocaleUpperCase('tr-TR'));}
+function tidy(s){s=s.replace(/[ \t]{2,}/g,' ');return s.replace(/(^|[.!?…]\s+|\n)(\p{Ll})/gu,(m,a,b)=>a+b.toLocaleUpperCase(state.lang||'tr-TR'));}
 function joinText(a,b){if(!b)return a;if(!a||/\s$/.test(a))return a+b;return a+(/^[.,!?…:;\n]/.test(b)?'':' ')+b;}
 
 function startRec(){
-  rec=new SR();rec.lang='tr-TR';rec.interimResults=true;rec.continuous=!isAndroid;rec.maxAlternatives=1;
+  rec=new SR();rec.lang=state.lang||'tr-TR';rec.interimResults=true;rec.continuous=!isAndroid;rec.maxAlternatives=1;
   rec.onresult=e=>{
     let fin='',interim='';
     for(let i=0;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=t+' ';else interim+=t;}
@@ -1047,7 +1264,8 @@ function startRec(){
   };
   rec.onerror=e=>{
     const m={'not-allowed':'Mikrofon izni verilmedi. Tarayıcı ayarlarından bu siteye mikrofon izni verin.','service-not-allowed':'Bu tarayıcıda konuşma tanıma kapalı.',
-      'no-speech':'Ses algılanmadı, tekrar deneyin.','network':'Konuşma tanıma için internet bağlantısı gerekiyor.','audio-capture':'Mikrofon bulunamadı.'}[e.error];
+      'no-speech':'Ses algılanmadı, tekrar deneyin.','network':'Konuşma tanıma için internet bağlantısı gerekiyor.','audio-capture':'Mikrofon bulunamadı.',
+      'language-not-supported':'Bu dil bu tarayıcıda desteklenmiyor; başka bir dil seçin.'}[e.error];
     if(m){$('#status').textContent=m;if(e.error!=='no-speech')stopListening(true);}
   };
   rec.onend=()=>{baseText=tidy(ta.value);if(listening){try{rec.start();}catch(_){stopListening();}}};
@@ -1055,8 +1273,9 @@ function startRec(){
 }
 function startListening(){
   if(!SR){toast('Bu tarayıcı sesle yazmayı desteklemiyor. Chrome veya Safari kullanın.');return;}
+  if(voice.rec){toast('Önce sesli mesaj kaydını bitirin.');return;}
   baseText=ta.value.trim();listening=true;
-  $('#mic').classList.add('on');$('#micLabel').textContent='Durdur';$('#status').textContent='Dinliyorum… Türkçe konuşun.';
+  $('#mic').classList.add('on');$('#micLabel').textContent='Durdur';$('#status').textContent=`Dinliyorum… (${langName()})`;
   try{startRec();}catch(e){stopListening();toast('Mikrofon başlatılamadı.');}
 }
 function stopListening(keepMsg){
@@ -1065,19 +1284,142 @@ function stopListening(keepMsg){
   if(!keepMsg)$('#status').textContent='Kayıt durdu. Metni düzenleyebilirsiniz.';
 }
 $('#mic').onclick=()=>listening?stopListening():startListening();
+// ek yazı alanına sesle yazma (tek seferlik)
+function dictateInto(area,onText){
+  if(!SR){toast('Bu tarayıcı sesle yazmayı desteklemiyor.');return;}
+  if(listening)stopListening(true);
+  const r=new SR();r.lang=state.lang||'tr-TR';r.interimResults=true;r.continuous=false;const base=area.value.trim()==='Yeni yazı'?'':area.value.trim();
+  r.onresult=e=>{let s='';for(let i=0;i<e.results.length;i++)s+=e.results[i][0].transcript;area.value=tidy(joinText(base,applyVoicePunct(s.trim())));onText(area.value);};
+  r.onerror=()=>toast('Ses algılanamadı, tekrar deneyin.');r.onend=()=>{$('#status').textContent=`Konuşma dili: ${langName()}`;};
+  try{r.start();$('#status').textContent='Ek yazı için dinliyorum…';}catch(e){toast('Mikrofon başlatılamadı.');}
+}
 if(!SR)$('#status').textContent='Bu tarayıcıda sesle yazma yok; Android’de Chrome, iPhone’da Safari kullanın.';
 else if(location.protocol==='file:')$('#status').textContent='Mikrofon için sayfayı https adresinden açın.';
+else $('#status').textContent=`Konuşma dili: ${langName()}`;
+
+/* =================== SESLİ MESAJ KAYDI =================== */
+const voice={rec:null,blob:null,url:'',t0:0,timer:0,send:true};
+const mmss=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const audioExt=t=>/mp4|m4a|aac/.test(t)?'m4a':/ogg/.test(t)?'ogg':/mpeg/.test(t)?'mp3':'webm';
+async function toggleVoice(){
+  if(voice.rec){voice.rec.stop();return;}
+  if(listening)stopListening(true);
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast('Bu tarayıcı ses kaydını desteklemiyor.');return;}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}
+  catch(e){toast('Mikrofon izni verilmedi. Tarayıcı ayarlarından izin verin.');return;}
+  const mime=['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+  const r=new MediaRecorder(stream,mime?{mimeType:mime}:{}),chunks=[];
+  r.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  r.onstop=()=>{stream.getTracks().forEach(t=>t.stop());clearInterval(voice.timer);voice.rec=null;
+    const type=(r.mimeType||mime||'audio/webm').split(';')[0];voice.blob=new Blob(chunks,{type});
+    if(voice.url)URL.revokeObjectURL(voice.url);voice.url=URL.createObjectURL(voice.blob);renderVoice();
+    toast('Sesli mesaj hazır. Kartla birlikte ya da video olarak gönderebilirsiniz.');if(activeTab==='hareket')buildPanel('hareket');};
+  r.start(250);voice.rec=r;voice.t0=Date.now();
+  voice.timer=setInterval(()=>{if((Date.now()-voice.t0)/1000>=120)r.stop();else renderVoice();},250);
+  renderVoice();
+}
+function renderVoice(){
+  const box=$('#voice');box.innerHTML='';
+  if(voice.rec){box.append(el('button',{type:'button',class:'vbtn rec',onclick:toggleVoice},el('i'),`Kaydı bitir ${mmss((Date.now()-voice.t0)/1000)}`),
+    el('span',{class:'hint',text:'En fazla 2 dakika'}));return;}
+  if(voice.blob){
+    const chk=el('input',{type:'checkbox',id:'f_voice_send'});chk.checked=voice.send;chk.onchange=()=>{voice.send=chk.checked;};
+    box.append(el('audio',{controls:'',src:voice.url,preload:'metadata'}),
+      el('label',{class:'chk'},chk,'Kartla gönder'),
+      el('button',{type:'button',class:'vbtn',text:'Yeniden kaydet',onclick:()=>{voice.blob=null;toggleVoice();}}),
+      el('button',{type:'button',class:'link',style:'color:var(--rec)',text:'Sil',onclick:()=>{voice.blob=null;if(voice.url)URL.revokeObjectURL(voice.url);voice.url='';renderVoice();if(activeTab==='hareket')buildPanel('hareket');}}));
+    return;}
+  box.append(el('button',{type:'button',class:'vbtn',onclick:toggleVoice},el('i'),'Sesli mesaj kaydet'),
+    el('span',{class:'hint',text:'Sesiniz kartla birlikte ya da sesli video olarak gönderilir.'}));
+}
+
+/* =================== HAREKETLİ KART: GIF ve VİDEO =================== */
+let animRaf=0,animStart=0,previewBase=null,previewBaseKey='';
+const animOn=(st=state)=>st.anim.particles!=='none'||st.anim.text!=='none'||st.anim.bg!=='none';
+function previewOpts(){return{preview:true,sel:selectedLayer,selText:selectedText};}
+function animTick(now){
+  if(!animOn()){animRaf=0;draw(canvas,state,1,previewOpts());return;}
+  const k=JSON.stringify(state)+'|'+selectedLayer+'|'+Object.keys(IMGS).length;
+  if(k!==previewBaseKey){previewBase=previewBase||document.createElement('canvas');draw(previewBase,state,1,{baseOnly:true,preview:true,sel:selectedLayer});previewBaseKey=k;}
+  draw(canvas,state,1,{...previewOpts(),base:previewBase,t:(now-animStart)/1000});
+  animRaf=requestAnimationFrame(animTick);
+}
+function makeBase(q){const b=document.createElement('canvas');draw(b,state,q,{baseOnly:true});return b;}
+let lastMedia=null,mediaBusy=false;
+const even=n=>Math.max(2,Math.round(n/2)*2);
+async function exportGif(onProg){
+  const{GIFEncoder,quantize,applyPalette}=await import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
+  await ensureFonts();
+  const[W,H]=dims(state),q=Math.min(1,480/Math.max(W,H)),fps=12,n=Math.round(state.anim.dur*fps);
+  const cv=document.createElement('canvas'),base=makeBase(q),gif=GIFEncoder();
+  for(let i=0;i<n;i++){
+    draw(cv,state,q,{base,t:i/fps});
+    const{data,width,height}=cv.getContext('2d',{willReadFrequently:true}).getImageData(0,0,cv.width,cv.height);
+    const pal=quantize(data,256),idx=applyPalette(data,pal);
+    gif.writeFrame(idx,width,height,{palette:pal,delay:Math.round(1000/fps)});
+    onProg((i+1)/n);if(i%2===0)await new Promise(r=>setTimeout(r,0));
+  }
+  gif.finish();return new Blob([gif.bytes()],{type:'image/gif'});
+}
+async function exportVideo(withAudio,onProg){
+  if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream)throw new Error('nosupport');
+  await ensureFonts();
+  const[W,H]=dims(state),q=Math.min(1,1280/Math.max(W,H));
+  const cv=document.createElement('canvas');cv.width=even(W*q);cv.height=even(H*q);
+  const qq=cv.width/W,base=makeBase(qq);draw(cv,state,qq,{base,t:0,once:true});
+  const stream=cv.captureStream(30);let dur=state.anim.dur,ac=null,src=null;
+  if(!animOn())dur=Math.min(dur,4);
+  if(withAudio&&voice.blob){
+    ac=new(window.AudioContext||window.webkitAudioContext)();
+    const buf=await ac.decodeAudioData(await voice.blob.arrayBuffer());
+    src=ac.createBufferSource();src.buffer=buf;const dest=ac.createMediaStreamDestination();src.connect(dest);
+    stream.addTrack(dest.stream.getAudioTracks()[0]);dur=Math.max(dur,buf.duration+.5);
+  }
+  const types=['video/mp4;codecs="avc1.42E01E, mp4a.40.2"','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+  const mime=types.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  const r=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:5000000}:{}),chunks=[];
+  r.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  const stopped=new Promise(res=>r.onstop=res);
+  r.start(250);if(src)src.start();const t0=performance.now();
+  await new Promise(res=>{const tick=()=>{const t=(performance.now()-t0)/1000;draw(cv,state,qq,{base,t,once:true});onProg(Math.min(1,t/dur));
+    if(t>=dur)res();else setTimeout(tick,33);};tick();});
+  r.stop();await stopped;stream.getTracks().forEach(t=>t.stop());if(ac)ac.close();
+  const type=(r.mimeType||mime||'video/webm').split(';')[0];
+  return new Blob(chunks,{type});
+}
+const mediaExt=t=>t.includes('gif')?'gif':t.includes('mp4')?'mp4':'webm';
+async function runExport(kind,withAudio){
+  if(mediaBusy)return;mediaBusy=true;if(listening)stopListening(true);
+  const bar=$('#mediaProg i'),msg=$('#mediaMsg');const prog=p=>{if(bar)bar.style.width=Math.round(p*100)+'%';};
+  if(msg)msg.textContent=kind==='gif'?'GIF hazırlanıyor… Bu sayfada kalın.':'Video kaydediliyor… Bu sayfada kalın, ekranı kapatmayın.';
+  try{
+    const blob=kind==='gif'?await exportGif(prog):await exportVideo(withAudio,prog);
+    if(lastMedia&&lastMedia.url)URL.revokeObjectURL(lastMedia.url);
+    lastMedia={blob,url:URL.createObjectURL(blob),name:'not-'+Date.now().toString(36)+'.'+mediaExt(blob.type)};
+    toast(kind==='gif'?'GIF hazır.':'Video hazır.');
+  }catch(e){toast(e.message==='nosupport'?'Bu tarayıcı video kaydını desteklemiyor; GIF deneyin.':'Oluşturulamadı: '+(e.message||'bilinmeyen hata'));}
+  mediaBusy=false;if(activeTab==='hareket')buildPanel('hareket');
+}
+async function shareMedia(){
+  if(!lastMedia)return;const file=new File([lastMedia.blob],lastMedia.name,{type:lastMedia.blob.type});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});}catch(e){if(e.name!=='AbortError')downloadAs(lastMedia.blob,lastMedia.name);}}
+  else{downloadAs(lastMedia.blob,lastMedia.name);toast('Bu tarayıcı doğrudan paylaşamıyor; dosya indirildi.');}
+}
 
 /* =================== PAYLAŞ / İNDİR / KOPYALA =================== */
 const fileName=()=>'not-'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')+'.png';
-function download(blob){const a=el('a',{href:URL.createObjectURL(blob),download:fileName()});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+function downloadAs(blob,name){const a=el('a',{href:URL.createObjectURL(blob),download:name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+const download=blob=>downloadAs(blob,fileName());
 $('#share').onclick=async()=>{
   if(listening)stopListening();
   const ready=exportBlob&&exportKey===keyOf();
   const blob=ready?exportBlob:await makeBlob();
   const file=new File([blob],fileName(),{type:'image/png'});
-  if(navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({files:[file]});}
+  let files=[file];
+  if(voice.blob&&voice.send){const af=new File([voice.blob],'sesli-mesaj.'+audioExt(voice.blob.type),{type:voice.blob.type});
+    if(navigator.canShare&&navigator.canShare({files:[file,af]}))files=[file,af];else toast('Ses bu yolla eklenemedi; Hareket sekmesinden sesli video oluşturun.');}
+  if(navigator.canShare&&navigator.canShare({files})){
+    try{await navigator.share({files});}
     catch(e){if(e.name==='NotAllowedError')toast('Görsel hazır, tekrar dokunun.');else if(e.name!=='AbortError'){download(blob);toast('PNG indirildi.');}}
   }else{download(blob);toast('Bu tarayıcı doğrudan paylaşamıyor; PNG indirildi, mesaja ekleyebilirsiniz.');}
 };
@@ -1087,7 +1429,31 @@ async function copyImage(){
   catch(e){toast('Bu tarayıcı görsel kopyalamayı desteklemiyor; İndir düğmesini kullanın.');}
 }
 
+/* =================== ARAYÜZ TEMASI =================== */
+const ACCENTS={teal:['Deniz','#0E6B6A','#3FB3B0'],blue:['Mavi','#1D4ED8','#7AA2FF'],purple:['Mor','#6D28D9','#B794F6'],
+  pink:['Pembe','#BE185D','#F472B6'],orange:['Turuncu','#C2410C','#FB923C'],green:['Yeşil','#15803D','#4ADE80'],gray:['Gri','#374151','#A3ACB9']};
+let ui={theme:'system',accent:'teal'};
+try{ui={...ui,...JSON.parse(localStorage.getItem('sesliNotUI')||'{}')};}catch(e){}
+function applyUI(){
+  const r=document.documentElement,a=ACCENTS[ui.accent]||ACCENTS.teal;
+  if(ui.theme==='system')r.removeAttribute('data-theme');else r.setAttribute('data-theme',ui.theme);
+  r.style.setProperty('--accent-l',a[1]);r.style.setProperty('--accent-d',a[2]);
+  const dark=ui.theme==='dark'||(ui.theme==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  document.querySelector('meta[name=theme-color]').setAttribute('content',dark?'#121918':a[1]);
+  try{localStorage.setItem('sesliNotUI',JSON.stringify(ui));}catch(e){}
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyUI);
+
+/* =================== UYGULAMA OLARAK YÜKLEME (PWA) =================== */
+let installPrompt=null;
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;if(activeTab==='ayar')buildPanel('ayar');});
+window.addEventListener('appinstalled',()=>{installPrompt=null;toast('Uygulama yüklendi.');if(activeTab==='ayar')buildPanel('ayar');});
+if('serviceWorker'in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+
 /* =================== BAŞLAT =================== */
+applyUI();renderVoice();
 buildTabs();buildPanel(activeTab);updUndo();updTouch();ensureImages();gcImages();
 drawPreview();
 ensureFonts().then(()=>{drawPreview();makeBlob();});
